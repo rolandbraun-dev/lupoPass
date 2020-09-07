@@ -9,13 +9,31 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var currentView: GlobalCurrentView // EnvironmentObject -> truth for the current main view
+    @EnvironmentObject var dataModel: GlobalDataModel
+    
     var body: some View {
-        Text("Hello, World!")
+        
+        VStack {
+            // Switch between main content views
+            if self.currentView.display == "ItemsView" {
+                //ItemsView()
+                ItemsView()
+            } else if self.currentView.display == "SettingsView" {
+                SettingsView()
+            }
+            
+            Spacer()
+            // TabBar disabled. Trying not to use it.
+            //TabBarView()
+        }
+        
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView().environmentObject(GlobalCurrentView()).environmentObject(GlobalDataModel())
     }
 }
