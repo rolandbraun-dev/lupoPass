@@ -44,4 +44,34 @@ class DBHelper {
         }
     }
     
+   func insert( name: String, result: String, list: String) {
+        let query = "INSERT INTO grade (id, name, result, list) VALUES (?, ?, ?, ?);"
+        
+        var statement:OpaquePointer? = nil
+        
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_int(statement, 1, 1)
+            sqlite3_bind_text(statement, 2, (name as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 3, (result as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 4, (list as NSString).utf8String, -1, nil)
+            print("Inserted data to database")
+        } else {
+            print("Query is not as per requirement")
+        }
+    }
+    
+    func read(id: Int) -> String {
+        let query = "SELECT * from grade;"
+        var statement: OpaquePointer? = nil
+        var returnString = "..."
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+                let name = String(describing: sqlite3_column_text(statement, 1))
+                returnString += "\(id) - \(name)\n"
+            }
+        }
+        return returnString
+    }
+    
 }
